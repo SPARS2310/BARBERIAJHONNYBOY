@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bienvenido - Barbería</title>
+<style>
+    body { background: #121212; color: white; font-family: sans-serif; text-align: center; }
+    .barberos { display: flex; justify-content: center; gap: 20px; margin-top: 50px; }
+    .card { background: #1e1e1e; padding: 20px; border-radius: 20px; text-decoration: none; color: white; border: 2px solid #333; }
+    .card img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; }
+</style>
+<h1>¿Tienes cita con alguien?</h1>
+<div class="barberos">
+    {% for b in barberos %}
+    <a href="/servicios/{{ b.nombre }}/" class="card">
+        <img src="/static/images/{{ b.foto }}" alt="{{ b.nombre }}"><br>
+        <h3>{{ b.nombre }}</h3>
+    </a>
+    {% endfor %}
+</div>
+<br><br>
+<a href="/servicios/SinCita/" style="color: #f39c12; font-size: 1.5rem;">VENGO SIN CITA</a>

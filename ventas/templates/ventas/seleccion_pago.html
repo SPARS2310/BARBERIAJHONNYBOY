@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Barbería - Inicio</title>
+    <style>
+        body { background: #121212; color: white; font-family: sans-serif; text-align: center; padding-top: 100px; }
+        .btn { padding: 50px 80px; font-size: 2rem; border-radius: 20px; color: white; text-decoration: none; margin: 20px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <h1>¿Cómo desea pagar?</h1>
+
+    <a href="/finalizar/{{ barbero }}/{{ servicio_id }}/EF/" class="btn" style="background: #2e7d32;">EFECTIVO</a>
+
+    <a href="mercadopago://payment?amount={{ precio }}&description=Corte%20{{ servicio_nombre }}&external_id={{ servicio_id }}" 
+       class="btn" 
+       style="background: #1565c0;">
+       TARJETA
+    </a>
+
+</body>
+</html>

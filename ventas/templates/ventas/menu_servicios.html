@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Menú de Barbería</title>
+<style>
+    body { background: #121212; color: white; font-family: sans-serif; text-align: center; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 800px; margin: auto; }
+    .serv { background: #1e1e1e; padding: 30px; border-radius: 15px; border: 2px solid #f39c12; text-decoration: none; color: white; }
+</style>
+<h1>Servicios con: {{ barbero }}</h1>
+<div class="grid">
+    {% for s in servicios %}
+    <a href="/pago/{{ barbero }}/{{ s.id }}/" class="serv">
+        <h2>{{ s.nombre }}</h2>
+        <p style="font-size: 1.5rem;">${{ s.precio }}</p>
+    </a>
+    {% endfor %}
+</div>
