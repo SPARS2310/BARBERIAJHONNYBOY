@@ -1,5 +1,9 @@
 from django.shortcuts import render, redirect
 from .models import Venta
+# --- Agregamos estas dos importaciones para el webhook ---
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 def seleccionar_cita(request):
     barberos = [
@@ -43,3 +47,24 @@ def finalizar_pago(request, barbero_nombre, servicio_id, metodo):
         metodo_pago=metodo
     )
     return render(request, 'ventas/gracias.html')
+
+# --- AQUÍ EMPIEZA LO NUEVO (EL WEBHOOK) ---
+@csrf_exempt
+def webhook(request):
+    if request.method == 'GET':
+        token_verificacion = 'BarberIA' 
+        mode = request.GET.get('hub.mode')
+        token = request.GET.get('hub.verify_token')
+        challenge = request.GET.get('hub.challenge')
+        
+        if mode == 'subscribe' and token == token_verificacion:
+            return HttpResponse(challenge)
+        return HttpResponse('Token incorrecto', status=403)
+
+    elif request.method == 'POST':
+        data = json.loads(request.body)
+        # Por ahora solo imprimimos en la consola de Render para ver que llegue
+        print("Mensaje de WhatsApp:", data)
+        return HttpResponse('EVENT_RECEIVED', status=200)
+
+    return HttpResponse('Método no permitido', status=405)
