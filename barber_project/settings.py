@@ -10,7 +10,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-907$w0kyu^4@)59m)l-k*
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 # Aquí agregamos la URL que te dio Render y mantenemos local para pruebas
-ALLOWED_HOSTS = ['barberia-jhonnyboy.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['barberiajhonnyboy.onrender.com', 'localhost', '127.0.0.1']
 
 
 INSTALLED_APPS = [
