@@ -43,9 +43,10 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
-                'django.contrib.auth.processors.auth',
-                'django.contrib.messages.processors.messages',
+                'django.contrib.auth.context_processors.auth',  # Corregido: se agregó .context_processors
+                'django.contrib.messages.context_processors.messages', # Corregido: se agregó .context_processors
             ],
         },
     },
@@ -53,8 +54,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'barber_project.wsgi.application'
 
-# Base de Datos: Por ahora mantenemos SQLite, pero Render lo borrará cada que reinicies.
-# Si vas a rentarlo, pronto debemos cambiar a PostgreSQL.
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -70,14 +69,14 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Configuración para Tijuana / México
-LANGUAGE_CODE = 'es-mx' # Cambiado a Español
-TIME_ZONE = 'America/Tijuana' # Cambiado a tu zona horaria
+LANGUAGE_CODE = 'es-mx'
+TIME_ZONE = 'America/Tijuana'
 USE_I18N = True
 USE_TZ = True
 
 # Archivos Estáticos (CSS, JS, Imágenes)
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles' # Directorio donde Render guardará los estáticos
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
