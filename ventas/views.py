@@ -8,9 +8,10 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Venta
 
 # --- CONFIGURACIÓN DE APIS ---
-# Sustituye con tus claves reales o usa variables de entorno en Render
-GEMINI_KEY = "TU_API_KEY_DE_GEMINI_AQUI"
-WHATSAPP_TOKEN = "TU_TOKEN_DE_META_AQUI"
+# Lee las claves de las variables de entorno de tu sistema o de Render.
+# NUNCA dejes el token de Meta pegado directamente en el código final.
+GEMINI_KEY = os.getenv("GEMINI_KEY", "AIzaSyAevpUsVo-sBc4y8oPFjoKRPHmNUGIFSpo")
+WHATSAPP_TOKEN = os.getenv("WHATSAPP_TOKEN", "EAAOHTV5vDkwBRayqSH6JmSAsSh6woX0aSJHM2ASxYsCyzf52c7kpTQvaYYl3jdtkzFFJjeJtrBeNnnFUsBa8grbh7zqRuNcQgGpmCn3yv2VMvaMfjN0sWGyaQ2p5DX6jAZCu5hTDBx8T0yvlBgvRL93Jhu478IemUkmrB5ZC4eeIZCdrqZBabwmpPyt81QZDZD") 
 WA_ID_TELEFONO = "1092201717308687"
 
 genai.configure(api_key=GEMINI_KEY)
@@ -28,10 +29,11 @@ model = genai.GenerativeModel(
 # --- 1. FUNCIONES DEL CAJERO (TABLET/WEB) ---
 
 def seleccionar_cita(request):
+    # Unificados para que coincidan con la IA
     barberos = [
         {'nombre': 'Rafael', 'foto': 'rafael.jpg'},
-        {'nombre': 'Antonio', 'foto': 'antonio.jpg'},
-        {'nombre': 'Benito', 'foto': 'benito.jpg'},
+        {'nombre': 'Paulina', 'foto': 'paulina.jpg'},
+        {'nombre': 'Valentina', 'foto': 'valentina.jpg'},
     ]
     return render(request, 'ventas/seleccionar_cita.html', {'barberos': barberos})
 
@@ -84,7 +86,10 @@ def enviar_whatsapp_api(numero, texto):
         "type": "text",
         "text": {"body": texto}
     }
-    requests.post(url, headers=headers, json=payload)
+    
+    response = requests.post(url, headers=headers, json=payload)
+    # Esto te ayudará a ver en la consola si Meta rechaza tu envío
+    print(f"Estado de envío a Meta: {response.status_code} - {response.text}")
 
 # --- 3. EL WEBHOOK (WHATSAPP + IA) ---
 
@@ -103,25 +108,34 @@ def webhook(request):
     elif request.method == 'POST':
         try:
             data = json.loads(request.body)
-            # Extraer el mensaje y el número
-            entry = data['entry'][0]['changes'][0]['value']
-            if 'messages' in entry:
-                message = entry['messages'][0]
-                numero_cliente = message['from']
-                texto_usuario = message['text']['body']
-
-                # Generar respuesta con Gemini
-                chat = model.start_chat(history=[])
-                response = chat.send_message(texto_usuario)
-                respuesta_ia = response.text
-
-                # Enviar respuesta real a WhatsApp
-                enviar_whatsapp_api(numero_cliente, respuesta_ia)
+            # Validar que la estructura traiga cambios
+            if 'entry' in data and data['entry'][0].get('changes'):
+                entry = data['entry'][0]['changes'][0]['value']
                 
-                print(f"Chat: {numero_cliente} -> {respuesta_ia}")
+                # Validar que traiga mensajes y no solo recibos de lectura
+                if 'messages' in entry:
+                    message = entry['messages'][0]
+                    numero_cliente = message['from']
+                    
+                    # ¡AQUÍ ESTABA EL POSIBLE ERROR!
+                    # Validar explícitamente que el mensaje sea de texto
+                    if message.get('type') == 'text':
+                        texto_usuario = message['text']['body']
 
+                        # Generar respuesta con Gemini
+                        chat = model.start_chat(history=[])
+                        response = chat.send_message(texto_usuario)
+                        respuesta_ia = response.text
+
+                        # Enviar respuesta real a WhatsApp
+                        enviar_whatsapp_api(numero_cliente, respuesta_ia)
+                        
+                        print(f"ÉXITO - Chat: {numero_cliente} -> {respuesta_ia}")
+                    else:
+                        print("Se recibió un mensaje que no es texto (imagen, audio, etc).")
+                        
         except Exception as e:
-            print("Error procesando Webhook:", e)
+            print(f"ERROR procesando Webhook: {e}")
 
         return HttpResponse('EVENT_RECEIVED', status=200)
 
