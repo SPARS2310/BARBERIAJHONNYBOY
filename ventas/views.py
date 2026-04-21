@@ -12,7 +12,7 @@ from .models import Venta
 # NUNCA dejes el token de Meta pegado directamente en el código final.
 GEMINI_KEY = os.getenv("GEMINI_KEY", "AIzaSyAevpUsVo-sBc4y8oPFjoKRPHmNUGIFSpo")
 WHATSAPP_TOKEN = os.getenv("WHATSAPP_TOKEN", "EAAOHTV5vDkwBRayqSH6JmSAsSh6woX0aSJHM2ASxYsCyzf52c7kpTQvaYYl3jdtkzFFJjeJtrBeNnnFUsBa8grbh7zqRuNcQgGpmCn3yv2VMvaMfjN0sWGyaQ2p5DX6jAZCu5hTDBx8T0yvlBgvRL93Jhu478IemUkmrB5ZC4eeIZCdrqZBabwmpPyt81QZDZD") 
-WA_ID_TELEFONO = "1092201717308687"
+WA_ID_TELEFONO = "1051125998088010"
 
 genai.configure(api_key=GEMINI_KEY)
 model = genai.GenerativeModel(
