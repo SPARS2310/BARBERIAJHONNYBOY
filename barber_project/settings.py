@@ -1,4 +1,4 @@
-import os # Importamos os para manejar variables de entorno
+import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -12,7 +12,6 @@ DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 # Aquí agregamos la URL que te dio Render y mantenemos local para pruebas
 ALLOWED_HOSTS = ['barberiajhonnyboy.onrender.com', 'localhost', '127.0.0.1']
 
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -25,7 +24,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # AGREGADO: Para manejar archivos estáticos
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -45,8 +44,8 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',  # Corregido: se agregó .context_processors
-                'django.contrib.messages.context_processors.messages', # Corregido: se agregó .context_processors
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
             ],
         },
     },
